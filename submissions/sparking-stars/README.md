@@ -10,7 +10,7 @@ A monochrome time-trial game starring your own Rare Friend, with six generation-
 
 - **[Play the public beta](https://lebucheron.github.io/sparking-stars/)**
 - **[Five-slide presentation (PDF, French)](./Sparking-Stars-Presentation.pdf)**
-- **[Source snapshot](https://github.com/lebucheron/sparking-stars/tree/8fcd285)**, on `server/leaderboard-foundation`. Please use this snapshot rather than the repository's older default branch.
+- **[Source snapshot](https://github.com/lebucheron/sparking-stars/tree/16996f4)**, on `server/leaderboard-foundation`. Please use this snapshot rather than the repository's older default branch.
 - FriendSDK **v0.1.2**, React/TypeScript and a custom Supabase leaderboard/style service. AI-assisted development with Codex. The game UI is in French.
 
 ## How it uses Rare Friends
@@ -30,7 +30,7 @@ These are original game circuits, not a claim about official Rare Friends land d
 
 ## Requirements and a quick playthrough
 
-Use a browser wallet owning a **hardwired Generations NFT, generation 1 or higher, on Robinhood mainnet (chain 4663)**. The gate also applies to simulated previews. Ranked play requires an injected wallet provider. No RF funding, private key entry or transaction is required. Ranked login asks for a free message signature, not a token approval or payment.
+Use a browser wallet owning a **hardwired Generations NFT, generation 1 or higher, on Robinhood mainnet (chain 4663)**. The gate also applies to simulated previews. The public host uses an injected wallet when available, or MetaMask Connect EVM 2.1.1 to connect the mobile app while keeping gameplay in Chrome. No RF funding, private key entry or transaction is required. Ranked login asks for a free message signature, not a token approval or payment.
 
 1. Open the demo, connect through the SDK and choose your eligible Friend.
 2. Start **Entraînement**. Move with arrows, WASD, ZQSD or click/tap. Clicks move directly and stop at obstacles, so choose detours yourself.
@@ -71,7 +71,7 @@ Node.js 22+, npm and Git are required. Windows development uses Ubuntu in WSL2.
 ```sh
 git clone --branch server/leaderboard-foundation https://github.com/lebucheron/sparking-stars.git
 cd sparking-stars
-git checkout 8fcd285
+git checkout 16996f4
 npm ci
 npm run build
 npm run dev:game -- games/sparking-stars --port 4174
@@ -79,7 +79,7 @@ npm run dev:game -- games/sparking-stars --port 4174
 
 Open the printed local URL. This standard SDK preview supports local play but does not include the custom production leaderboard host. Use the hosted beta to review live ranked play and saved cosmetics.
 
-`node scripts/build-sparking-public.mjs` builds the custom host to `build-public/` and regenerates the shared race-rules version and server validator. Backend source, migrations and deployment notes are in [`supabase/`](https://github.com/lebucheron/sparking-stars/tree/8fcd285/supabase). A separate backend deployment requires a Supabase project and matching endpoint, origin and signature-domain configuration. The published configuration targets the hosted beta. No service credentials are included in the repository.
+`node scripts/build-sparking-public.mjs` builds the custom host to `build-public/` and regenerates the shared race-rules version and server validator. Backend source, migrations and deployment notes are in [`supabase/`](https://github.com/lebucheron/sparking-stars/tree/16996f4/supabase). A separate backend deployment requires a Supabase project and matching endpoint, origin and signature-domain configuration. The published configuration targets the hosted beta. No service credentials are included in the repository.
 
 Validation completed during development and release:
 
@@ -99,10 +99,13 @@ Representative commands: `node server/test-validation.mjs`, `node server/test-pu
 - Personal ghosts, local records and free-mode garage state are session-only. Ranked scores and Constellations progress persist. New circuit rules start a separate leaderboard while retaining old stored results.
 - The public host uses a responsive viewport and desktop frame rather than a fixed 960×640 frame, following the SDK's documented custom host sizing. The Vibeathon README still mentions 960×640. This sizing difference is disclosed for organizer review. Gameplay stays in the SDK sandbox, with wallet controls and signed-login/capture controls in the trusted host.
 - The leaderboard bridge is a custom application extension, not a claimed built-in SDK persistence API. Server credentials stay server-side. Ranked/style availability depends on the hosted backend and RPC services.
-- No audio is included. Reduced-motion settings are respected. Mobile ranked play needs a wallet browser with an injected provider.
+- No audio is included. Reduced-motion settings are respected. The Chrome-to-MetaMask relay also handles ranked message signing. Its Android app round trip still needs player confirmation. Return to the existing Chrome tab manually if Android does not switch back automatically.
 - The SDK-required `game.json` retains an unused chance-game schema. No pack purchase/play/redeem actions are invoked. Its payout table is not the racing economy described above.
 - This entry targets Character Spotlight. There is no implemented RF-backed economy or token spending. Any future paid season or RF integration would require separate design and review.
 
 ## Credits
 
-Original circuit layouts and racing rules by Le Bûcheron with AI coding assistance. Scenery, original Friend artwork and adapted rendering come from FriendSDK. See the source snapshot's [NOTICE.md](https://github.com/lebucheron/sparking-stars/blob/8fcd285/NOTICE.md) and [Apache-2.0 license](https://github.com/lebucheron/sparking-stars/blob/8fcd285/LICENSE). Screenshots in the presentation come from the project. No third-party music is used.
+Original circuit layouts and racing rules by Le Bûcheron with AI coding assistance. Scenery, original Friend artwork and adapted rendering come from FriendSDK. See the source snapshot's [NOTICE.md](https://github.com/lebucheron/sparking-stars/blob/16996f4/NOTICE.md) and [Apache-2.0 license](https://github.com/lebucheron/sparking-stars/blob/16996f4/LICENSE). Screenshots in the presentation come from the project. No third-party music is used.
+
+The ranked login bar now appears only for authenticated actions and hides after login or when returning to training. Dependency audit reports a moderate transitive uuid advisory (GHSA-w5hq-g745-h8pq) in the current MetaMask dependency chain, with no fix offered by npm for that chain. The adapter does not directly use the affected v3/v5/v6 buffer APIs.
+
